@@ -1,4 +1,4 @@
-# 🚀 The Situations Vacant — MERN Job Portal
+# 🚀 The Talent Hub — MERN Job Portal
 
 <p align="center">
   A modern full-stack job portal built with the <b>MERN Stack</b>, enabling applicants to find jobs and employers to manage recruitment efficiently.
@@ -8,7 +8,7 @@
 
 ## 📌 Overview
 
-**The Situations Vacant** is a responsive job portal that connects **Job Seekers** with **Employers** through a secure and user-friendly platform.
+**The Talent Hub** is a responsive job portal that connects **Job Seekers** with **Employers** through a secure and user-friendly platform.
 
 The application provides authentication, job posting, resume uploads, applicant tracking, employer dashboards, company profiles, and much more.
 
@@ -328,5 +328,5 @@ If you like this project,
 ---
 
 <p align="center">
-Made with ❤️ using the MERN Stack
+Made  using the MERN Stack
 </p>
