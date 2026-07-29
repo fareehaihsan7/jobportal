@@ -65,3 +65,53 @@ export const uploadLogo = multer({
   fileFilter: logoFileFilter,
   limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
 });
+// ======================================================
+// Profile Picture Upload
+// ======================================================
+
+const profileDir = path.join(
+  __dirname,
+  "..",
+  "uploads",
+  "profile-pictures"
+);
+
+if (!fs.existsSync(profileDir)) {
+  fs.mkdirSync(profileDir, { recursive: true });
+}
+
+const profileStorage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, profileDir),
+
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    cb(null, `${req.user._id}-${Date.now()}${ext}`);
+  },
+});
+
+const IMAGE_EXTENSIONS = [
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".webp",
+];
+
+const profileFileFilter = (req, file, cb) => {
+  const ext = path.extname(file.originalname).toLowerCase();
+
+  if (!IMAGE_EXTENSIONS.includes(ext)) {
+    return cb(
+      new Error("Only JPG, PNG or WEBP images are allowed")
+    );
+  }
+
+  cb(null, true);
+};
+
+export const uploadProfilePicture = multer({
+  storage: profileStorage,
+  fileFilter: profileFileFilter,
+  limits: {
+    fileSize: 2 * 1024 * 1024,
+  },
+});

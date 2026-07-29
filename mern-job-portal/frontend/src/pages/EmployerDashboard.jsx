@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api, { resolveFileUrl } from "../api/axios.js";
+import {
+  FiUsers,
+  FiEdit2,
+  FiTrash2,
+  FiLock,
+  FiMapPin,
+  FiBriefcase,
+  FiPlus,
+} from "react-icons/fi";
 
 const STATUS_OPTIONS = ["submitted", "under_review", "interview", "rejected", "hired"];
 
@@ -62,104 +71,257 @@ export default function EmployerDashboard() {
   };
 
   return (
-    <div className="max-w-[900px] mx-auto px-6 py-8">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-gray-900">Employer dashboard</h2>
-        <Link to="/post-job" className="bg-blue-700 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-blue-800 hover:no-underline">
-          + Post a job
-        </Link>
+  <div className="min-h-screen bg-gray-100 py-10">
+    <div className="max-w-6xl mx-auto px-4">
+
+      {/* Header */}
+      <div className="bg-gradient-to-r from-blue-700 to-indigo-700 rounded-2xl p-8 text-white shadow-lg mb-8">
+       <div className="flex flex-col md:flex-row justify-between items-center gap-5">
+
+  <div>
+    <h1 className="text-3xl font-bold">
+      Employer Dashboard
+    </h1>
+
+    <p className="text-blue-100 mt-2">
+      Manage your job postings and applicants.
+    </p>
+  </div>
+
+  <div className="flex gap-3">
+
+    <Link
+      to="/employer/profile"
+      className="flex items-center gap-2 bg-white text-blue-700 px-5 py-3 rounded-xl font-semibold shadow hover:bg-gray-100 hover:no-underline transition"
+    >
+      👤 Employer Profile
+    </Link>
+
+    <Link
+      to="/post-job"
+      className="flex items-center gap-2 bg-indigo-900 text-white px-5 py-3 rounded-xl font-semibold shadow hover:bg-indigo-950 hover:no-underline transition"
+    >
+      <FiPlus />
+      Post Job
+    </Link>
+
+  </div>
+
+</div>
       </div>
 
-      {loading && <p className="text-gray-500 text-sm">Loading your listings…</p>}
-      {!loading && jobs.length === 0 && (
-        <p className="text-gray-500 text-sm">You haven't posted any listings yet. <Link to="/post-job">Post your first one</Link>.</p>
+      {/* Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+        <div className="bg-white rounded-xl shadow p-5">
+          <p className="text-gray-500 text-sm">Total Jobs</p>
+          <h2 className="text-3xl font-bold">{jobs.length}</h2>
+        </div>
+
+        <div className="bg-white rounded-xl shadow p-5">
+          <p className="text-gray-500 text-sm">Open Jobs</p>
+          <h2 className="text-3xl font-bold text-green-600">
+            {jobs.filter((j) => j.status === "open").length}
+          </h2>
+        </div>
+
+        <div className="bg-white rounded-xl shadow p-5">
+          <p className="text-gray-500 text-sm">Closed Jobs</p>
+          <h2 className="text-3xl font-bold text-red-500">
+            {jobs.filter((j) => j.status !== "open").length}
+          </h2>
+        </div>
+      </div>
+
+      {loading && (
+        <div className="text-center py-10 text-gray-500">
+          Loading your listings...
+        </div>
       )}
 
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+      {!loading && jobs.length === 0 && (
+        <div className="bg-white rounded-xl shadow p-10 text-center">
+          <h3 className="text-xl font-semibold mb-3">
+            No jobs posted yet
+          </h3>
+
+          <Link
+            to="/post-job"
+            className="bg-blue-700 text-white px-5 py-3 rounded-lg hover:bg-blue-800 hover:no-underline"
+          >
+            Post Your First Job
+          </Link>
+        </div>
+      )}
+
+      <div className="space-y-6">
+
         {jobs.map((job) => (
-          <div key={job._id}>
-            <div className="border-b border-gray-200 last:border-b-0 p-4 flex justify-between gap-4 items-start flex-wrap">
-              <div>
-                <span className="text-base font-bold text-blue-700">{job.title}</span>
-                <p className="text-sm text-gray-500 mt-0.5 mb-1">
-                  {job.location}{job.remote ? " · Remote" : ""} —{" "}
-                  <span className={job.status === "open" ? "text-green-700 font-semibold" : "text-red-600 font-semibold"}>
+          <div
+            key={job._id}
+            className="bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6"
+          >
+
+            <div className="flex flex-col lg:flex-row justify-between gap-6">
+
+              {/* Job Details */}
+              <div className="flex-1">
+
+                <h2 className="text-2xl font-bold text-blue-700">
+                  {job.title}
+                </h2>
+
+                <div className="flex flex-wrap gap-5 text-gray-600 mt-3">
+
+                  <div className="flex items-center gap-2">
+                    <FiMapPin />
+                    {job.location}
+                    {job.remote && " • Remote"}
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <FiBriefcase />
+                    {job.type}
+                  </div>
+
+                  <span className="bg-gray-100 px-3 py-1 rounded-full text-sm">
+                    {job.category}
+                  </span>
+
+                  <span
+                    className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                      job.status === "open"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-600"
+                    }`}
+                  >
                     {job.status}
                   </span>
-                </p>
-                <div className="flex gap-3 text-xs text-gray-500">
-                  <span>{job.type}</span>
-                  <span>{job.category}</span>
+
                 </div>
+
               </div>
-              <div className="flex gap-2 flex-wrap flex-shrink-0">
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap gap-2 h-fit">
+
                 <button
                   onClick={() => toggleApplicants(job._id)}
-                  className="border border-gray-200 rounded-md px-3.5 py-1.5 text-xs font-medium text-gray-900 hover:border-blue-700 hover:text-blue-700"
+                  className="flex items-center gap-2 bg-indigo-600 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition"
                 >
-                  {expandedJob === job._id ? "Hide applicants" : "View applicants"}
+                  <FiUsers size={16} />
+                  {expandedJob === job._id ? "Hide" : "Applicants"}
                 </button>
+
                 <button
                   onClick={() => handleToggleStatus(job)}
-                  className="border border-gray-200 rounded-md px-3.5 py-1.5 text-xs font-medium text-gray-900 hover:border-blue-700 hover:text-blue-700"
+                  className="flex items-center gap-2 bg-amber-500 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-amber-600 transition"
                 >
-                  {job.status === "open" ? "Close listing" : "Reopen listing"}
+                  <FiLock size={16} />
+                  {job.status === "open" ? "Close" : "Reopen"}
                 </button>
+
                 <Link
                   to={`/edit-job/${job._id}`}
-                  className="border border-gray-200 rounded-md px-3.5 py-1.5 text-xs font-medium text-gray-900 hover:border-blue-700 hover:text-blue-700 hover:no-underline"
+                  className="flex items-center gap-2 bg-slate-700 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-slate-800 transition hover:no-underline"
                 >
+                  <FiEdit2 size={15} />
                   Edit
                 </Link>
+
                 <button
                   onClick={() => handleDelete(job._id)}
-                  className="border border-red-300 rounded-md px-3.5 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50"
+                  className="flex items-center gap-2 bg-red-500 text-white px-3 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition"
                 >
+                  <FiTrash2 size={15} />
                   Delete
                 </button>
+
               </div>
+
             </div>
 
+            {/* Applicants */}
             {expandedJob === job._id && (
-              <div className="bg-gray-50 border-b border-gray-200 px-4 pb-4 pt-1">
-                {applicantsLoading && <p className="text-gray-500 text-sm">Loading applicants…</p>}
-                {!applicantsLoading && applicants.length === 0 && (
-                  <p className="text-gray-500 text-sm">No applicants yet for this listing.</p>
+              <div className="mt-6 border-t pt-5">
+
+                {applicantsLoading && (
+                  <p className="text-gray-500">Loading applicants...</p>
                 )}
-                {!applicantsLoading && applicants.map((app) => (
-                  <div key={app._id} className="flex justify-between gap-4 items-start border-b border-gray-200 last:border-b-0 py-3.5">
-                    <div>
-                      <p className="text-sm font-bold text-gray-900 m-0">{app.applicant.name}</p>
-                      <p className="text-sm text-gray-500 my-0.5">
-                        {app.applicant.email}{app.applicant.headline ? ` — ${app.applicant.headline}` : ""}
-                      </p>
-                      {app.coverLetter && <p className="text-sm text-gray-900 my-1.5 max-w-md">{app.coverLetter}</p>}
-                      {app.resumeUrl && (
-                        <a
-                          href={resolveFileUrl(app.resumeUrl)}
-                          target="_blank"
-                          rel="noreferrer"
-                          download
-                          className="text-sm text-blue-700 hover:underline"
-                        >
-                          {app.resumeOriginalName ? `Download resume: ${app.resumeOriginalName} →` : "Download resume →"}
-                        </a>
-                      )}
-                    </div>
-                    <select
-                      value={app.status}
-                      onChange={(e) => updateStatus(app._id, e.target.value)}
-                      className="text-xs border border-gray-200 rounded-md px-2 py-1.5 flex-shrink-0"
+
+                {!applicantsLoading && applicants.length === 0 && (
+                  <p className="text-gray-500">
+                    No applicants yet.
+                  </p>
+                )}
+
+                {!applicantsLoading &&
+                  applicants.map((app) => (
+                    <div
+                      key={app._id}
+                      className="bg-gray-50 rounded-xl p-5 mb-4 flex flex-col md:flex-row justify-between gap-5"
                     >
-                      {STATUS_OPTIONS.map((s) => <option key={s} value={s}>{s.replace("_", " ")}</option>)}
-                    </select>
-                  </div>
-                ))}
+                      <div>
+                        <h3 className="font-semibold text-lg">
+                          {app.applicant.name}
+                        </h3>
+
+                        <p className="text-gray-600">
+                          {app.applicant.email}
+                        </p>
+
+                        {app.applicant.headline && (
+                          <p className="text-blue-700 mt-1">
+                            {app.applicant.headline}
+                          </p>
+                        )}
+
+                        {app.coverLetter && (
+                          <p className="mt-3 text-gray-700">
+                            {app.coverLetter}
+                          </p>
+                        )}
+
+                        {app.resumeUrl && (
+                          <a
+                            href={resolveFileUrl(app.resumeUrl)}
+                            target="_blank"
+                            rel="noreferrer"
+                            download
+                            className="inline-block mt-3 text-blue-700 hover:underline"
+                          >
+                            📄 Download Resume
+                          </a>
+                        )}
+                      </div>
+
+                      <div>
+                        <select
+                          value={app.status}
+                          onChange={(e) =>
+                            updateStatus(app._id, e.target.value)
+                          }
+                          className="border rounded-lg px-3 py-2"
+                        >
+                          {STATUS_OPTIONS.map((s) => (
+                            <option key={s} value={s}>
+                              {s.replace("_", " ")}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  ))}
+
               </div>
             )}
+
           </div>
         ))}
+
       </div>
+
     </div>
-  );
-}
+  </div>
+  
+);
+};

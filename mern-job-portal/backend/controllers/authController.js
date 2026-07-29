@@ -1,130 +1,13 @@
-// import jwt from "jsonwebtoken";
-// import User from "../models/User.js";
 
-// const signToken = (id) =>
-//   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
-
-// export const register = async (req, res) => {
-//   try {
-//     const { name, email, password, role, companyName } = req.body;
-
-//     if (!name || !email || !password || !role) {
-//       return res.status(400).json({ message: "Name, email, password, and role are required" });
-//     }
-//     if (!["applicant", "employer"].includes(role)) {
-//       return res.status(400).json({ message: "Role must be 'applicant' or 'employer'" });
-//     }
-//     if (role === "employer" && !companyName) {
-//       return res.status(400).json({ message: "Company name is required for employer accounts" });
-//     }
-
-//     const existing = await User.findOne({ email: email.toLowerCase() });
-//     if (existing) {
-//       return res.status(409).json({ message: "An account with that email already exists" });
-//     }
-
-//     const user = await User.create({
-//       name,
-//       email,
-//       password,
-//       role,
-//       companyName: role === "employer" ? companyName : undefined,
-//     });
-
-//     const token = signToken(user._id);
-//     res.status(201).json({ token, user: user.toSafeObject() });
-//   } catch (err) {
-//     res.status(500).json({ message: "Registration failed", error: err.message });
-//   }
-// };
-
-// export const login = async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-//     if (!email || !password) {
-//       return res.status(400).json({ message: "Email and password are required" });
-//     }
-
-//     const user = await User.findOne({ email: email.toLowerCase() });
-//     if (!user || !(await user.matchPassword(password))) {
-//       return res.status(401).json({ message: "Invalid email or password" });
-//     }
-
-//     const token = signToken(user._id);
-//     res.json({ token, user: user.toSafeObject() });
-//   } catch (err) {
-//     res.status(500).json({ message: "Login failed", error: err.message });
-//   }
-// };
-
-// export const getMe = async (req, res) => {
-//   res.json({ user: req.user });
-// };
-
-// export const uploadProfileResume = async (req, res) => {
-//   try {
-//     if (!req.file) {
-//       return res.status(400).json({ message: "No file was uploaded" });
-//     }
-//     const resumeUrl = `/uploads/resumes/${req.file.filename}`;
-//     const user = await User.findByIdAndUpdate(
-//       req.user._id,
-//       { resumeUrl, resumeOriginalName: req.file.originalname },
-//       { new: true }
-//     ).select("-password");
-
-//     res.json({ user });
-//   } catch (err) {
-//     res.status(500).json({ message: "Resume upload failed", error: err.message });
-//   }
-// };
-
-// export const uploadCompanyLogo = async (req, res) => {
-//   try {
-//     if (!req.file) {
-//       return res.status(400).json({ message: "No file was uploaded" });
-//     }
-//     const companyLogoUrl = `/uploads/logos/${req.file.filename}`;
-//     const user = await User.findByIdAndUpdate(
-//       req.user._id,
-//       { companyLogoUrl },
-//       { new: true }
-//     ).select("-password");
-
-//     res.json({ user });
-//   } catch (err) {
-//     res.status(500).json({ message: "Logo upload failed", error: err.message });
-//   }
-// };
-
-// export const updateProfile = async (req, res) => {
-//   try {
-//     const allowedFields =
-//       req.user.role === "employer"
-//         ? ["name", "companyName", "companyWebsite", "companyDescription"]
-//         : ["name", "headline", "phone", "location", "resumeUrl", "skills"];
-
-//     const updates = {};
-//     for (const field of allowedFields) {
-//       if (req.body[field] !== undefined) updates[field] = req.body[field];
-//     }
-
-//     const user = await User.findByIdAndUpdate(req.user._id, updates, {
-//       new: true,
-//       runValidators: true,
-//     }).select("-password");
-
-//     res.json({ user });
-//   } catch (err) {
-//     res.status(500).json({ message: "Profile update failed", error: err.message });
-//   }
-// };
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import User from "../models/User.js";
+import Job from "../models/Job.js";
+import { OAuth2Client } from "google-auth-library";
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export const register = async (req, res) => {
   try {
@@ -166,6 +49,7 @@ export const register = async (req, res) => {
       email: email.toLowerCase(),
       password: hashedPassword,
       role,
+      authProvider: "local",
       companyName: role === "employer" ? companyName : "",
     });
 
@@ -201,11 +85,17 @@ export const login = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(401).json({
-        message: "Invalid email or password",
-      });
-    }
+  return res.status(401).json({
+    message: "Invalid email or password",
+  });
+}
 
+if (user.authProvider === "google") {
+  return res.status(400).json({
+    message:
+      "This account uses Google Sign-In. Please continue with Google.",
+  });
+}
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
@@ -230,7 +120,60 @@ export const login = async (req, res) => {
     });
   }
 };
+export const googleLogin = async (req, res) => {
+  try {
+    const { credential } = req.body;
 
+    if (!credential) {
+      return res.status(400).json({
+        message: "Google credential is required",
+      });
+    }
+
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+
+    let user = await User.findOne({
+      email: payload.email.toLowerCase(),
+    });
+
+    if (!user) {
+      user = await User.create({
+        name: payload.name,
+        email: payload.email.toLowerCase(),
+        password: "",
+        role: "applicant",
+        authProvider: "google",
+        googleId: payload.sub,
+        profilePicture: payload.picture,
+      });
+    } else if (user.authProvider === "local") {
+      return res.status(400).json({
+        message:
+          "This email is already registered with a password. Please sign in using your password.",
+      });
+    }
+
+    const token = signToken(user._id);
+
+    const userObj = user.toObject();
+    delete userObj.password;
+
+    res.json({
+      token,
+      user: userObj,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Google login failed",
+      error: err.message,
+    });
+  }
+};
 export const getMe = async (req, res) => {
   res.json({
     user: req.user,
@@ -269,6 +212,36 @@ export const uploadProfileResume = async (req, res) => {
   }
 };
 
+// export const uploadCompanyLogo = async (req, res) => {
+//   try {
+//     if (!req.file) {
+//       return res.status(400).json({
+//         message: "No file was uploaded",
+//       });
+//     }
+
+//     const companyLogoUrl = `/uploads/logos/${req.file.filename}`;
+
+//     const user = await User.findByIdAndUpdate(
+//       req.user._id,
+//       {
+//         companyLogoUrl,
+//       },
+//       {
+//         new: true,
+//       }
+//     ).select("-password");
+
+//     res.json({
+//       user,
+//     });
+//   } catch (err) {
+//     res.status(500).json({
+//       message: "Logo upload failed",
+//       error: err.message,
+//     });
+//   }
+// };
 export const uploadCompanyLogo = async (req, res) => {
   try {
     if (!req.file) {
@@ -279,6 +252,7 @@ export const uploadCompanyLogo = async (req, res) => {
 
     const companyLogoUrl = `/uploads/logos/${req.file.filename}`;
 
+    // Update employer profile
     const user = await User.findByIdAndUpdate(
       req.user._id,
       {
@@ -288,6 +262,15 @@ export const uploadCompanyLogo = async (req, res) => {
         new: true,
       }
     ).select("-password");
+
+    // Update all jobs posted by this employer
+    await Job.updateMany(
+      { employer: req.user._id },
+      {
+        companyLogoUrl,
+        companyName: user.companyName,
+      }
+    );
 
     res.json({
       user,
@@ -300,49 +283,144 @@ export const uploadCompanyLogo = async (req, res) => {
   }
 };
 
+// export const updateProfile = async (req, res) => {
+//   try {
+//     const allowedFields =
+//       req.user.role === "employer"
+//         ? [
+//           "name",
+//           "companyName",
+//           "companyWebsite",
+//           "companyDescription",
+//         ]
+//         : [
+//           "name",
+//           "headline",
+//           "phone",
+//           "location",
+//           "resumeUrl",
+//           "skills",
+//         ];
+
+//     const updates = {};
+
+//     for (const field of allowedFields) {
+//       if (req.body[field] !== undefined) {
+//         updates[field] = req.body[field];
+//       }
+//     }
+
+//     const user = await User.findByIdAndUpdate(
+//       req.user._id,
+//       updates,
+//       {
+//         new: true,
+//         runValidators: true,
+//       }
+//     ).select("-password");
+
+//     res.json({
+//       user,
+//     });
+//   } catch (err) {
+//     res.status(500).json({
+//       message: "Profile update failed",
+//       error: err.message,
+//     });
+//   }
+// };
 export const updateProfile = async (req, res) => {
   try {
-    const allowedFields =
-      req.user.role === "employer"
-        ? [
-            "name",
-            "companyName",
-            "companyWebsite",
-            "companyDescription",
-          ]
-        : [
-            "name",
-            "headline",
-            "phone",
-            "location",
-            "resumeUrl",
-            "skills",
-          ];
+    const user = await User.findById(req.user._id);
 
-    const updates = {};
-
-    for (const field of allowedFields) {
-      if (req.body[field] !== undefined) {
-        updates[field] = req.body[field];
-      }
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
     }
 
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      updates,
-      {
-        new: true,
-        runValidators: true,
-      }
-    ).select("-password");
+    const {
+      name,
+      companyName,
+      phone,
+      designation,
+      location,
+      bio,
+      headline,
+      skills,
+    } = req.body;
 
-    res.json({
-      user,
+    // Common Fields
+    if (name !== undefined) user.name = name;
+    if (headline !== undefined) user.headline = headline;
+    if (companyName !== undefined) user.companyName = companyName;
+
+    if (phone !== undefined) user.phone = phone;
+    if (designation !== undefined) user.designation = designation;
+    if (location !== undefined) user.location = location;
+    if (bio !== undefined) user.bio = bio;
+
+    // Skills
+    if (skills !== undefined) {
+      user.skills = Array.isArray(skills)
+        ? skills
+        : skills
+            .split(",")
+            .map((skill) => skill.trim())
+            .filter(Boolean);
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully.",
+      user: user.toSafeObject ? user.toSafeObject() : user,
     });
-  } catch (err) {
+  } catch (error) {
+    console.error(error);
+
     res.status(500).json({
-      message: "Profile update failed",
-      error: err.message,
+      success: false,
+      message: "Failed to update profile.",
+    });
+  }
+};
+export const uploadEmployerProfilePicture = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "Please select an image.",
+      });
+    }
+
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+
+    user.profilePicture = `/uploads/profile-pictures/${req.file.filename}`;
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Profile picture uploaded successfully.",
+      profilePicture: user.profilePicture,
+      user: user.toSafeObject ? user.toSafeObject() : user,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to upload profile picture.",
     });
   }
 };

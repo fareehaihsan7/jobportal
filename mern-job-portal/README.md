@@ -132,5 +132,5 @@ applicant themselves) can fetch a given file.
 ## Notes & next steps
 
 - Passwords are hashed with bcrypt; sessions are stateless JWTs (7-day expiry) stored in `localStorage`.
-- No email notifications yet — a natural next step would be notifying applicants when their status changes.
+- No email notifications yet — a natural next  step would be notifying applicants when their status changes.
 - Add indexes/pagination tuning before using this with a large dataset in production.

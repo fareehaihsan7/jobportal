@@ -15,6 +15,7 @@ import Profile from "./pages/Profile.jsx";
 import SavedJobs from "./pages/SavedJobs.jsx";
 import Landing from "./pages/Landing.jsx";
 import EditProfile from "./pages/EditProfile.jsx";
+import EmployerProfile from "./pages/EmployerProfile";
 function Dashboard() {
   const { user } = useAuth();
   if (user?.role === "employer") return <EmployerDashboard />;
@@ -78,6 +79,10 @@ export default function App() {
       <EditProfile />
     </ProtectedRoute>
   }
+/>
+<Route
+  path="/employer/profile"
+  element={<EmployerProfile />}
 />
       </Routes>
       <footer className="text-center text-xs text-gray-500 py-8 border-t border-gray-200 mt-auto">

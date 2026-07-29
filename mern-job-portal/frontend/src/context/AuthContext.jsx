@@ -9,38 +9,74 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const token = localStorage.getItem("jp_token");
+
     if (!token) {
       setLoading(false);
       return;
     }
+
     api
       .get("/auth/me")
       .then((res) => setUser(res.data.user))
-      .catch(() => localStorage.removeItem("jp_token"))
+      .catch(() => {
+        localStorage.removeItem("jp_token");
+      })
       .finally(() => setLoading(false));
   }, []);
 
+  // Email & Password Login
   const login = async (email, password) => {
-    const res = await api.post("/auth/login", { email, password });
+    const res = await api.post("/auth/login", {
+      email,
+      password,
+    });
+
     localStorage.setItem("jp_token", res.data.token);
     setUser(res.data.user);
+
     return res.data.user;
   };
 
+  // Google Login
+  const googleLogin = async (credential) => {
+    const res = await api.post("/auth/google", {
+      credential,
+    });
+
+    localStorage.setItem("jp_token", res.data.token);
+    setUser(res.data.user);
+
+    return res.data.user;
+  };
+
+  // Register
   const register = async (payload) => {
     const res = await api.post("/auth/register", payload);
+
     localStorage.setItem("jp_token", res.data.token);
     setUser(res.data.user);
+
     return res.data.user;
   };
 
+  // Logout
   const logout = () => {
     localStorage.removeItem("jp_token");
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, loading, login, register, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        setUser,
+        loading,
+        login,
+        googleLogin,
+        register,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
