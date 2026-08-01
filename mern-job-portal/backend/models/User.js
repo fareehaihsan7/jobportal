@@ -80,15 +80,30 @@ const userSchema = new mongoose.Schema(
     // Applicant Fields
     // ==========================
 
-    resumeUrl: {
-      type: String,
-      default: "",
-    },
+    // resumeUrl: {
+    //   type: String,
+    //   default: "",
+    // },
 
-    resumeOriginalName: {
-      type: String,
-      default: "",
-    },
+    // resumeOriginalName: {
+    //   type: String,
+    //   default: "",
+    // },
+    resumeUrl: {
+  type: String,
+  default: "",
+},
+
+resumeOriginalName: {
+  type: String,
+  default: "",
+},
+
+// Resume Builder Data
+resumeBuilder: {
+  type: Object,
+  default: {},
+},
 
     skills: [
       {

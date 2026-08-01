@@ -21,6 +21,7 @@ import { Toaster } from "react-hot-toast";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import App from "./App.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
+
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(

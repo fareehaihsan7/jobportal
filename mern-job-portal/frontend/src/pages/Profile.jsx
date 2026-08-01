@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import api, { resolveFileUrl } from "../api/axios.js";
 
@@ -363,80 +363,86 @@ export default function EditProfile() {
 
                                 {user.resumeUrl ? (
                                     <div className="mb-5">
-                                    <a
+                                        <a
 
-                                     href={resolveFileUrl(user.resumeUrl)}
-                                     target="_blank"
-                                     rel="noreferrer"
-                                    className="text-blue-700 font-semibold hover:underline"
-                                    >
-                                        📄 {user.resumeOriginalName || "View Resume"}
-                                    </a>
-                  </div>
-                            ) : (
-                            <p className="text-gray-500 mb-5">No resume uploaded yet.</p>
-                )}
-
-                            <input
-                                type="file"
-                                accept=".pdf,.doc,.docx"
-                                onChange={handleResumeChange}
-                                className="block w-full text-sm border rounded-xl p-3"
-                            />
-
-                            {resumeError && <p className="text-red-600 mt-2 text-sm">{resumeError}</p>}
-                            {resumeMessage && <p className="text-green-700 mt-2 text-sm">{resumeMessage}</p>}
-
-                            {resumeFile && (
-                                <div className="mt-4 flex items-center justify-between bg-blue-50 rounded-xl p-4">
-                                    <div>
-                                        <p className="font-semibold text-blue-700">{resumeFile.name}</p>
-                                        <p className="text-xs text-gray-500">{(resumeFile.size / 1024).toFixed(1)} KB</p>
+                                            href={resolveFileUrl(user.resumeUrl)}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="text-blue-700 font-semibold hover:underline"
+                                        >
+                                            📄 {user.resumeOriginalName || "View Resume"}
+                                        </a>
                                     </div>
-                                    <button
-                                        type="button"
-                                        onClick={uploadResume}
-                                        disabled={uploadingResume}
-                                        className="bg-blue-700 text-white px-5 py-2 rounded-xl hover:bg-blue-800"
-                                    >
-                                        {uploadingResume ? "Uploading..." : "Upload Resume"}
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                </>
-          )}
+                                ) : (
+                                    <p className="text-gray-500 mb-5">No resume uploaded yet.</p>
+                                )}
 
-                {message && (
-                    <div
-                        className={`rounded-xl p-4 text-center font-medium ${message.toLowerCase().includes("success")
+                                <input
+                                    type="file"
+                                    accept=".pdf,.doc,.docx"
+                                    onChange={handleResumeChange}
+                                    className="block w-full text-sm border rounded-xl p-3"
+                                />
+
+                                {resumeError && <p className="text-red-600 mt-2 text-sm">{resumeError}</p>}
+                                {resumeMessage && <p className="text-green-700 mt-2 text-sm">{resumeMessage}</p>}
+
+                                {resumeFile && (
+                                    <div className="mt-4 flex items-center justify-between bg-blue-50 rounded-xl p-4">
+                                        <div>
+                                            <p className="font-semibold text-blue-700">{resumeFile.name}</p>
+                                            <p className="text-xs text-gray-500">{(resumeFile.size / 1024).toFixed(1)} KB</p>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={uploadResume}
+                                            disabled={uploadingResume}
+                                            className="bg-blue-700 text-white px-5 py-2 rounded-xl hover:bg-blue-800"
+                                        >
+                                            {uploadingResume ? "Uploading..." : "Upload Resume"}
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </>
+                    )}
+
+                    {message && (
+                        <div
+                            className={`rounded-xl p-4 text-center font-medium ${message.toLowerCase().includes("success")
                                 ? "bg-green-100 text-green-700"
                                 : "bg-red-100 text-red-700"
-                            }`}
-                    >
-                        {message}
-                    </div>
-                )}
+                                }`}
+                        >
+                            {message}
+                        </div>
+                    )}
 
-                <div className="flex gap-4 pt-2">
-                    <button
-                        type="submit"
-                        disabled={saving}
-                        className="flex-1 bg-blue-700 text-white py-4 rounded-xl text-lg font-semibold hover:bg-blue-800 transition disabled:opacity-50"
+                    <div className="flex gap-4 pt-2">
+                        <button
+                            type="submit"
+                            disabled={saving}
+                            className="flex-1 bg-blue-700 text-white py-4 rounded-xl text-lg font-semibold hover:bg-blue-800 transition disabled:opacity-50"
+                        >
+                            {saving ? "Saving..." : "Save Changes"}
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => navigate("/profile")}
+                            className="flex-1 border border-gray-300 py-4 rounded-xl text-lg font-semibold hover:bg-gray-100 transition"
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                    {/* <Link
+                        to="/resume-builder"
+                        className="inline-flex items-center rounded-lg bg-blue-600 px-5 py-2.5 text-white font-medium hover:bg-blue-700 transition"
                     >
-                        {saving ? "Saving..." : "Save Changes"}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => navigate("/profile")}
-                        className="flex-1 border border-gray-300 py-4 rounded-xl text-lg font-semibold hover:bg-gray-100 transition"
-                    >
-                        Cancel
-                    </button>
-                </div>
-            </form>
-        </div>
-      
-    </div >
-  );
+                        Resume Builder
+                    </Link> */}
+                </form>
+            </div>
+
+        </div >
+    );
 }

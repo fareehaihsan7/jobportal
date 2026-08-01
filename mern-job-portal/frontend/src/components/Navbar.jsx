@@ -2,8 +2,10 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 
+
 export default function Navbar() {
   const { user, logout } = useAuth();
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -12,46 +14,97 @@ export default function Navbar() {
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
+    <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10 transition-colors duration-300">
       <div className="max-w-[1100px] mx-auto px-6 py-3.5 flex items-center justify-between gap-6">
         <Link to="/" className="flex items-center gap-2">
           <img src="/logo.svg" alt="TalentHub" className="h-8" />
         </Link>
 
         <div className="flex items-center gap-6">
-          <nav className="flex items-center gap-6 pr-6 border-r border-gray-200">
-            <Link to="/jobs" className="text-sm font-medium text-gray-900 hover:text-blue-700 hover:no-underline">Find jobs</Link>
+          <nav className="flex items-center gap-6 pr-6 border-r border-gray-200 dark:border-gray-700">
+            <Link
+              to="/jobs"
+              className="text-sm font-medium text-gray-900 dark:text-white hover:text-blue-700 hover:no-underline"
+            >
+              Find jobs
+            </Link>
+
             {user?.role === "applicant" && (
-              <Link to="/saved-jobs" className="text-sm font-medium text-gray-900 hover:text-blue-700 hover:no-underline">Saved jobs</Link>
+              <Link
+                to="/saved-jobs"
+                className="text-sm font-medium text-gray-900 dark:text-white hover:text-blue-700 hover:no-underline"
+              >
+                Saved jobs
+              </Link>
             )}
             {user?.role === "applicant" && (
-              <Link to="/profile" className="text-sm font-medium text-gray-900 hover:text-blue-700 hover:no-underline">Profile</Link>
+              <Link
+                to="/resume-builder"
+                className="text-sm font-medium text-gray-900 dark:text-white hover:text-blue-700 hover:no-underline"
+              >
+                Resume Builder
+              </Link>
             )}
+
             {user?.role === "applicant" && (
-              <Link to="/dashboard" className="text-sm font-medium text-gray-900 hover:text-blue-700 hover:no-underline">My applications</Link>
+              <Link
+                to="/profile"
+                className="text-sm font-medium text-gray-900 dark:text-white hover:text-blue-700 hover:no-underline"
+              >
+                Profile
+              </Link>
             )}
+
+            {user?.role === "applicant" && (
+              <Link
+                to="/dashboard"
+                className="text-sm font-medium text-gray-900 dark:text-white hover:text-blue-700 hover:no-underline"
+              >
+                My applications
+              </Link>
+            )}
+
             {user?.role === "employer" && (
-              <Link to="/dashboard" className="text-sm font-medium text-gray-900 hover:text-blue-700 hover:no-underline">Dashboard</Link>
+              <Link
+                to="/dashboard"
+                className="text-sm font-medium text-gray-900 dark:text-white hover:text-blue-700 hover:no-underline"
+              >
+                Dashboard
+              </Link>
             )}
+
             {user?.role === "employer" && (
-              <Link to="/profile" className="text-sm font-medium text-gray-900 hover:text-blue-700 hover:no-underline">Company profile</Link>
+              <Link
+                to="/profile"
+                className="text-sm font-medium text-gray-900 dark:text-white hover:text-blue-700 hover:no-underline"
+              >
+                Company profile
+              </Link>
             )}
           </nav>
 
           <div className="flex items-center gap-4">
+
+
+
             {user?.role === "employer" && (
               <Link
                 to="/post-job"
-                className="border-[1.5px] border-blue-700 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold hover:bg-blue-50 hover:no-underline"
+                className="border-[1.5px] border-blue-700 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:no-underline"
               >
                 Post a job
               </Link>
             )}
+
             {!user && (
-              <Link to="/login" className="text-sm font-medium text-gray-900 hover:text-blue-700 hover:no-underline">
+              <Link
+                to="/login"
+                className="text-sm font-medium text-gray-900 dark:text-white hover:text-blue-700 hover:no-underline"
+              >
                 Sign in
               </Link>
             )}
+
             {!user && (
               <Link
                 to="/register"
@@ -60,10 +113,11 @@ export default function Navbar() {
                 Register
               </Link>
             )}
+
             {user && (
               <button
                 onClick={handleLogout}
-                className="text-sm font-medium text-gray-900 hover:text-blue-700 bg-transparent border-none cursor-pointer"
+                className="text-sm font-medium text-gray-900 dark:text-white hover:text-blue-700 bg-transparent border-none cursor-pointer"
               >
                 Log out
               </button>

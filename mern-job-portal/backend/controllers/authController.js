@@ -180,6 +180,37 @@ export const getMe = async (req, res) => {
   });
 };
 
+// export const uploadProfileResume = async (req, res) => {
+//   try {
+//     if (!req.file) {
+//       return res.status(400).json({
+//         message: "No file was uploaded",
+//       });
+//     }
+
+//     const resumeUrl = `/uploads/resumes/${req.file.filename}`;
+
+//     const user = await User.findByIdAndUpdate(
+//       req.user._id,
+//       {
+//         resumeUrl,
+//         resumeOriginalName: req.file.originalname,
+//       },
+//       {
+//         new: true,
+//       }
+//     ).select("-password");
+
+//     res.json({
+//       user,
+//     });
+//   } catch (err) {
+//     res.status(500).json({
+//       message: "Resume upload failed",
+//       error: err.message,
+//     });
+//   }
+// };
 export const uploadProfileResume = async (req, res) => {
   try {
     if (!req.file) {
@@ -188,7 +219,8 @@ export const uploadProfileResume = async (req, res) => {
       });
     }
 
-    const resumeUrl = `/uploads/resumes/${req.file.filename}`;
+    // Cloudinary file URL
+    const resumeUrl = req.file.path;
 
     const user = await User.findByIdAndUpdate(
       req.user._id,
@@ -201,17 +233,24 @@ export const uploadProfileResume = async (req, res) => {
       }
     ).select("-password");
 
+    console.log("Resume URL:", resumeUrl);
+
     res.json({
+      success: true,
+      resumeUrl,
       user,
     });
+
   } catch (err) {
+    console.error(err);
+
     res.status(500).json({
+      success: false,
       message: "Resume upload failed",
       error: err.message,
     });
   }
 };
-
 // export const uploadCompanyLogo = async (req, res) => {
 //   try {
 //     if (!req.file) {
@@ -242,6 +281,46 @@ export const uploadProfileResume = async (req, res) => {
 //     });
 //   }
 // };
+// export const uploadCompanyLogo = async (req, res) => {
+//   try {
+//     if (!req.file) {
+//       return res.status(400).json({
+//         message: "No file was uploaded",
+//       });
+//     }
+
+//     const companyLogoUrl = `/uploads/logos/${req.file.filename}`;
+
+//     // Update employer profile
+//     const user = await User.findByIdAndUpdate(
+//       req.user._id,
+//       {
+//         companyLogoUrl,
+//       },
+//       {
+//         new: true,
+//       }
+//     ).select("-password");
+
+//     // Update all jobs posted by this employer
+//     await Job.updateMany(
+//       { employer: req.user._id },
+//       {
+//         companyLogoUrl,
+//         companyName: user.companyName,
+//       }
+//     );
+
+//     res.json({
+//       user,
+//     });
+//   } catch (err) {
+//     res.status(500).json({
+//       message: "Logo upload failed",
+//       error: err.message,
+//     });
+//   }
+// };
 export const uploadCompanyLogo = async (req, res) => {
   try {
     if (!req.file) {
@@ -250,7 +329,8 @@ export const uploadCompanyLogo = async (req, res) => {
       });
     }
 
-    const companyLogoUrl = `/uploads/logos/${req.file.filename}`;
+    // Cloudinary URL
+    const companyLogoUrl = req.file.path;
 
     // Update employer profile
     const user = await User.findByIdAndUpdate(
@@ -272,11 +352,19 @@ export const uploadCompanyLogo = async (req, res) => {
       }
     );
 
+    console.log("Company Logo URL:", companyLogoUrl);
+
     res.json({
+      success: true,
+      companyLogoUrl,
       user,
     });
+
   } catch (err) {
+    console.error(err);
+
     res.status(500).json({
+      success: false,
       message: "Logo upload failed",
       error: err.message,
     });
@@ -389,6 +477,9 @@ export const updateProfile = async (req, res) => {
 };
 export const uploadEmployerProfilePicture = async (req, res) => {
   try {
+     console.log("req.file =", req.file);
+
+
     if (!req.file) {
       return res.status(400).json({
         success: false,
@@ -405,8 +496,8 @@ export const uploadEmployerProfilePicture = async (req, res) => {
       });
     }
 
-    user.profilePicture = `/uploads/profile-pictures/${req.file.filename}`;
-
+     //user.profilePicture = `/uploads/profile-pictures/${req.file.filename}`;
+    user.profilePicture = req.file.path;
     await user.save();
 
     res.status(200).json({
