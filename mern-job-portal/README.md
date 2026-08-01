@@ -62,6 +62,7 @@ The application provides authentication, job posting, resume uploads, applicant 
 * JWT Authentication
 * Multer
 * bcrypt
+* cloudinary
 
 ---
 
