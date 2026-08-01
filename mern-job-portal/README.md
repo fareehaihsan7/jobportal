@@ -139,7 +139,7 @@ Maximum File Size
 * 5 MB
 
 ---
-📄 Resume Builder
+**📄 Resume Builder**
 
 The built-in Resume Builder allows applicants to create and manage professional resumes.
 
@@ -156,6 +156,17 @@ Achievements
 Social Links
 
 Resume data is stored in MongoDB and generated resumes can be uploaded and accessed through Cloudinary.
+#☁️ **Cloudinary Integration**
+
+Cloudinary is used for secure cloud storage of uploaded files.
+
+Supported Uploads
+Applicant Profile Pictures
+Employer Company Logos
+Applicant Resume PDFs
+Generated Resume Files
+
+Files are securely stored in Cloudinary and only their URLs are saved in MongoDB.
 
 # 🏢 Company Profile
 
