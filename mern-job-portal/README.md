@@ -139,6 +139,23 @@ Maximum File Size
 * 5 MB
 
 ---
+📄 Resume Builder
+
+The built-in Resume Builder allows applicants to create and manage professional resumes.
+
+Sections Included
+Personal Information
+Professional Summary
+Education
+Experience
+Projects
+Skills
+Languages
+Certifications
+Achievements
+Social Links
+
+Resume data is stored in MongoDB and generated resumes can be uploaded and accessed through Cloudinary.
 
 # 🏢 Company Profile
 
