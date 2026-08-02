@@ -3,15 +3,15 @@ import api from "../api/axios";
 import { toast } from "react-hot-toast";
 import html2pdf from "html2pdf.js";
 
-import PersonalInfoForm from "../components/resume/PersonalInfoForm";
-import SummaryForm from "../components/resume/SummaryForm";
-import SkillsForm from "../components/resume/SkillsForm";
-import EducationForm from "../components/resume/EducationForm";
-import ExperienceForm from "../components/resume/ExperienceForm";
-import ProjectsForm from "../components/resume/ProjectsForm";
-import LanguagesForm from "../components/resume/LanguagesForm";
-import CertificationForm from "../components/resume/CertificationForm";
-import ResumePreview from "../components/resume/ResumePreview";
+import PersonalInfoForm from "../components/Resume/PersonalInfoForm";
+import SummaryForm from "../components/Resume/SummaryForm";
+import SkillsForm from "../components/Resume/SkillsForm";
+import EducationForm from "../components/Resume/EducationForm";
+import ExperienceForm from "../components/Resume/ExperienceForm";
+import ProjectsForm from "../components/Resume/ProjectsForm";
+import LanguagesForm from "../components/Resume/LanguagesForm";
+import CertificationForm from "../components/Resume/CertificationForm";
+import ResumePreview from "../components/Resume/ResumePreview";
 
 import downloadResume from "../utils/downloadResume";
 
