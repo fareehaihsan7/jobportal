@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import connectDB from "./config/db.js";
-
+import paymentRoutes from "./routes/paymentRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import jobRoutes from "./routes/jobRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
@@ -13,15 +13,7 @@ import dns from 'dns';
 dns.setServers(['8.8.8.8', '1.1.1.1']);
 dotenv.config();
 
-// const result = dotenv.config();
 
-// console.log("dotenv result:", result);
-// console.log("Current directory:", process.cwd());
-// console.log("PORT:", process.env.PORT);
-// console.log("MONGO_URI exists:", !!process.env.MONGO_URI);
-// console.log("CLOUDINARY_CLOUD_NAME:", process.env.CLOUDINARY_CLOUD_NAME);
-// console.log("CLOUDINARY_API_KEY exists:", !!process.env.CLOUDINARY_API_KEY);
-// console.log("CLOUDINARY_API_SECRET exists:", !!process.env.CLOUDINARY_API_SECRET);
 connectDB();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -43,6 +35,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/applications", applicationRoutes);
 app.use("/api/resume", resumeRoutes);
+app.use("/api/payment", paymentRoutes);
 
 // 404 handler
 app.use((req, res) => res.status(404).json({ message: "Route not found" }));

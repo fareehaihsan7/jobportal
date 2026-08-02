@@ -180,37 +180,7 @@ export const getMe = async (req, res) => {
   });
 };
 
-// export const uploadProfileResume = async (req, res) => {
-//   try {
-//     if (!req.file) {
-//       return res.status(400).json({
-//         message: "No file was uploaded",
-//       });
-//     }
 
-//     const resumeUrl = `/uploads/resumes/${req.file.filename}`;
-
-//     const user = await User.findByIdAndUpdate(
-//       req.user._id,
-//       {
-//         resumeUrl,
-//         resumeOriginalName: req.file.originalname,
-//       },
-//       {
-//         new: true,
-//       }
-//     ).select("-password");
-
-//     res.json({
-//       user,
-//     });
-//   } catch (err) {
-//     res.status(500).json({
-//       message: "Resume upload failed",
-//       error: err.message,
-//     });
-//   }
-// };
 export const uploadProfileResume = async (req, res) => {
   try {
     if (!req.file) {
@@ -251,76 +221,7 @@ export const uploadProfileResume = async (req, res) => {
     });
   }
 };
-// export const uploadCompanyLogo = async (req, res) => {
-//   try {
-//     if (!req.file) {
-//       return res.status(400).json({
-//         message: "No file was uploaded",
-//       });
-//     }
 
-//     const companyLogoUrl = `/uploads/logos/${req.file.filename}`;
-
-//     const user = await User.findByIdAndUpdate(
-//       req.user._id,
-//       {
-//         companyLogoUrl,
-//       },
-//       {
-//         new: true,
-//       }
-//     ).select("-password");
-
-//     res.json({
-//       user,
-//     });
-//   } catch (err) {
-//     res.status(500).json({
-//       message: "Logo upload failed",
-//       error: err.message,
-//     });
-//   }
-// };
-// export const uploadCompanyLogo = async (req, res) => {
-//   try {
-//     if (!req.file) {
-//       return res.status(400).json({
-//         message: "No file was uploaded",
-//       });
-//     }
-
-//     const companyLogoUrl = `/uploads/logos/${req.file.filename}`;
-
-//     // Update employer profile
-//     const user = await User.findByIdAndUpdate(
-//       req.user._id,
-//       {
-//         companyLogoUrl,
-//       },
-//       {
-//         new: true,
-//       }
-//     ).select("-password");
-
-//     // Update all jobs posted by this employer
-//     await Job.updateMany(
-//       { employer: req.user._id },
-//       {
-//         companyLogoUrl,
-//         companyName: user.companyName,
-//       }
-//     );
-
-//     res.json({
-//       user,
-//     });
-//   } catch (err) {
-//     res.status(500).json({
-//       message: "Logo upload failed",
-//       error: err.message,
-//     });
-//   }
-// };
 export const uploadCompanyLogo = async (req, res) => {
   try {
     if (!req.file) {
@@ -371,52 +272,7 @@ export const uploadCompanyLogo = async (req, res) => {
   }
 };
 
-// export const updateProfile = async (req, res) => {
-//   try {
-//     const allowedFields =
-//       req.user.role === "employer"
-//         ? [
-//           "name",
-//           "companyName",
-//           "companyWebsite",
-//           "companyDescription",
-//         ]
-//         : [
-//           "name",
-//           "headline",
-//           "phone",
-//           "location",
-//           "resumeUrl",
-//           "skills",
-//         ];
 
-//     const updates = {};
-
-//     for (const field of allowedFields) {
-//       if (req.body[field] !== undefined) {
-//         updates[field] = req.body[field];
-//       }
-//     }
-
-//     const user = await User.findByIdAndUpdate(
-//       req.user._id,
-//       updates,
-//       {
-//         new: true,
-//         runValidators: true,
-//       }
-//     ).select("-password");
-
-//     res.json({
-//       user,
-//     });
-//   } catch (err) {
-//     res.status(500).json({
-//       message: "Profile update failed",
-//       error: err.message,
-//     });
-//   }
-// };
 export const updateProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);

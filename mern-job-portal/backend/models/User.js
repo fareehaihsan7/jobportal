@@ -76,19 +76,7 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
 
-    // ==========================
-    // Applicant Fields
-    // ==========================
-
-    // resumeUrl: {
-    //   type: String,
-    //   default: "",
-    // },
-
-    // resumeOriginalName: {
-    //   type: String,
-    //   default: "",
-    // },
+    
     resumeUrl: {
   type: String,
   default: "",
@@ -182,9 +170,11 @@ resumeBuilder: {
       default: "",
     },
   },
+  
   {
     timestamps: true,
   }
+  
 );
 
 export default mongoose.model("User", userSchema);

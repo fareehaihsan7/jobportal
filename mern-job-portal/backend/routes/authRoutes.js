@@ -11,13 +11,7 @@ router.post("/google", googleLogin);
 router.get("/me", protect, getMe);
 router.put("/me", protect, updateProfile);
 router.post("/me/resume", protect, requireRole("applicant"), uploadResume.single("resume"), uploadProfileResume);
-// router.post("/me/logo", protect, requireRole("employer"), uploadLogo.single("logo"), uploadCompanyLogo);
-// router.post(
-//   "/me/profile-picture",
-//   protect,
-//   uploadProfilePicture.single("profilePicture"),
-//   uploadEmployerProfilePicture
-// );
+
 router.post(
   "/me/logo",
   protect,

@@ -16,22 +16,7 @@ const __dirname = path.dirname(__filename);
 const uploadDir = path.join(__dirname, "..", "uploads", "resumes");
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
-// const storage = multer.diskStorage({
-//   destination: (req, file, cb) => cb(null, uploadDir),
-//   filename: (req, file, cb) => {
-//     const ext = path.extname(file.originalname).toLowerCase();
-//     const unique = `${req.user._id}-${Date.now()}${ext}`;
-//     cb(null, unique);
-//   },
-// });
-// const storage = new CloudinaryStorage({
-//   cloudinary,
-//   params: async (req, file) => ({
-//     folder: "job-portal/resumes",
-//     resource_type: "raw",
-//     public_id: `${req.user._id}-${Date.now()}`,
-//   }),
-// });
+
 const storage = new CloudinaryStorage({
   cloudinary,
   params: async (req, file) => ({
@@ -62,13 +47,7 @@ export const uploadResume = multer({
 const logoDir = path.join(__dirname, "..", "uploads", "logos");
 if (!fs.existsSync(logoDir)) fs.mkdirSync(logoDir, { recursive: true });
 
-// const logoStorage = multer.diskStorage({
-//   destination: (req, file, cb) => cb(null, logoDir),
-//   filename: (req, file, cb) => {
-//     const ext = path.extname(file.originalname).toLowerCase();
-//     cb(null, `${req.user._id}-${Date.now()}${ext}`);
-//   },
-// });
+
 const logoStorage = new CloudinaryStorage({
   cloudinary,
   params: async (req, file) => ({
@@ -108,14 +87,7 @@ if (!fs.existsSync(profileDir)) {
   fs.mkdirSync(profileDir, { recursive: true });
 }
 
-// const profileStorage = multer.diskStorage({
-//   destination: (req, file, cb) => cb(null, profileDir),
 
-//   filename: (req, file, cb) => {
-//     const ext = path.extname(file.originalname).toLowerCase();
-//     cb(null, `${req.user._id}-${Date.now()}${ext}`);
-//   },
-// });
 const profileStorage = new CloudinaryStorage({
   cloudinary,
   params: async (req, file) => ({

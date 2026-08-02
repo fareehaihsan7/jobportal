@@ -35,37 +35,7 @@ export default function SavedJobs() {
     }
   };
 
-//   return (
-//     <div className="max-w-[900px] mx-auto px-6 py-8">
-//       <div className="flex items-center justify-between mb-4">
-//         <h1 className="text-xl font-bold text-gray-900">Saved jobs</h1>
-//         <span className="text-sm text-gray-500">{jobs.length} saved</span>
-//       </div>
 
-//       {loading && <p className="text-gray-500 text-sm">Loading…</p>}
-
-//       {!loading && jobs.length === 0 && (
-//         <p className="text-gray-500 text-sm">
-//           Nothing saved yet. <Link to="/jobs">Browse open jobs</Link> and tap the bookmark icon to save one.
-//         </p>
-//       )}
-
-//       {!loading && jobs.length > 0 && (
-//         <div className="flex flex-col gap-3">
-//           {jobs.map((job) => (
-//             <JobCard
-//               key={job._id}
-//               job={job}
-//               showSave
-//               isSaved={savedIds.has(job._id)}
-//               onToggleSave={handleToggleSave}
-//             />
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
 return (
   <div className="min-h-screen bg-slate-50">
 

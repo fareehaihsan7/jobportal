@@ -13,7 +13,7 @@
     "axios": "^1.7.2",
     "html2pdf.js": "^0.14.0",
     "icons": "^1.0.0",
-    "lucide-react": "^1.25.0",
+    "lucide-react": "^1.28.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.6.0",

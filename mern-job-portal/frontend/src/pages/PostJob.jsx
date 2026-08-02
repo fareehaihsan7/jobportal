@@ -5,8 +5,7 @@ import api from "../api/axios.js";
 const CATEGORIES = ["Engineering", "Design", "Marketing", "Sales", "Operations", "Other"];
 const TYPES = ["Full-time", "Part-time", "Contract", "Internship"];
 
-// const inputClass = "px-3 py-2.5 border border-gray-200 rounded-md bg-white text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700";
-// const labelClass = "flex flex-col gap-1.5 text-sm font-medium text-gray-900";
+
 const labelClass =
   "flex flex-col gap-2 text-sm font-medium text-gray-700";
 

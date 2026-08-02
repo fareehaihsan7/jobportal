@@ -73,58 +73,7 @@ export default function EmployerProfile() {
 
 
 
-  // ===============================
-  // UPLOAD PROFILE PICTURE
-  // ===============================
-//   const handleImageUpload = async (e) => {
-//   const file = e.target.files[0];
-
-//   if (!file) return;
-
-//   // Show preview immediately
-//   setPreview(URL.createObjectURL(file));
-
-//   const data = new FormData();
-//   data.append("profilePicture", file);
-
-//   try {
-//     setUploading(true);
-
-//     const res = await api.post(
-//       "/auth/me/profile-picture",
-//       data,
-//       {
-//         headers: {
-//           "Content-Type": "multipart/form-data",
-//         },
-//       }
-//     );
-
-//     toast.success("Profile picture uploaded");
-
-//     const picture = res.data.profilePicture;
-
-//     setForm((prev) => ({
-//       ...prev,
-//       profilePicture: picture,
-//     }));
-//     setPreview(
-//   picture.startsWith("http")
-//     ? picture
-//     : `http://localhost:5000${picture}`
-// );
-//     // setPreview(`http://localhost:5000${picture}`);
-
-//   } catch (error) {
-//     console.error(error);
-
-//     toast.error(
-//       error.response?.data?.message || "Image upload failed"
-//     );
-//   } finally {
-//     setUploading(false);
-//   }
-// };
+  
   // ===============================
 // UPLOAD PROFILE PICTURE
 // ===============================

@@ -17,6 +17,7 @@ import Landing from "./pages/Landing.jsx";
 import EditProfile from "./pages/EditProfile.jsx";
 import EmployerProfile from "./pages/EmployerProfile";
 import ResumeBuilder from "./pages/ResumeBuilder";
+
 function Dashboard() {
   const { user } = useAuth();
   if (user?.role === "employer") return <EmployerDashboard />;
@@ -93,7 +94,7 @@ export default function App() {
     </ProtectedRoute>
   }
 />
-{/* <Route path="/resume-builder" element={<ResumeBuilder />} /> */}
+    
       </Routes>
       <footer className="text-center text-xs text-gray-500 py-8 border-t border-gray-200 mt-auto">
         © 2026 TalentHub · Built with the MERN stack

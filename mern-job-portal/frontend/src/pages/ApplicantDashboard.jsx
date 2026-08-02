@@ -181,34 +181,4 @@ export default function ApplicantDashboard() {
   </div>
 );
 
-  // return (
-  //   <div className="max-w-[900px] mx-auto px-6 py-8">
-  //     <div className="flex items-center justify-between mb-4">
-  //       <h2 className="text-xl font-bold text-gray-900">My applications</h2>
-  //       <span className="text-sm text-gray-500">{applications.length} submitted</span>
-  //     </div>
-
-  //     {loading && <p className="text-gray-500 text-sm">Loading…</p>}
-  //     {!loading && applications.length === 0 && (
-  //       <p className="text-gray-500 text-sm">You haven't applied to anything yet. <Link to="/jobs">Browse open listings</Link>.</p>
-  //     )}
-
-  //     <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-  //       {applications.map((app) => (
-  //         <div key={app._id} className="border-b border-gray-200 last:border-b-0 p-4 flex justify-between gap-4 items-start">
-  //           <div>
-  //             {app.job ? (
-  //               <Link to={`/jobs/${app.job._id}`} className="text-base font-bold text-blue-700">{app.job.title}</Link>
-  //             ) : (
-  //               <span className="text-base font-bold text-gray-900">Listing removed</span>
-  //             )}
-  //             <p className="text-sm text-gray-500 mt-0.5 mb-1">{app.job?.companyName} — {app.job?.location}</p>
-  //             <div className="text-xs text-gray-500">Applied {new Date(app.createdAt).toLocaleDateString()}</div>
-  //           </div>
-  //           <span className={statusPillClass(app.status)}>{STATUS_LABEL[app.status]}</span>
-  //         </div>
-  //       ))}
-  //     </div>
-  //   </div>
-  // );
 };
