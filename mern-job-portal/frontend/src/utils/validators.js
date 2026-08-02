@@ -46,3 +46,19 @@ export function validateConfirmPassword(value, password) {
 
   return "";
 }
+//username validations
+const USERNAME_RE = /^[A-Za-z\s]+$/;
+
+export function validateUsername(value) {
+  const username = value.trim();
+
+  if (!username) {
+    return "Full name is required";
+  }
+
+  if (!USERNAME_RE.test(username)) {
+    return "Full name can only contain alphabets";
+  }
+
+  return "";
+}

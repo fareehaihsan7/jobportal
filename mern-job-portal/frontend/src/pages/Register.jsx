@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
-import { validateEmail, validatePassword, validateRequired, validateConfirmPassword } from "../utils/validators.js";
+import { validateEmail, validatePassword, validateRequired, validateConfirmPassword , validateUsername,} from "../utils/validators.js";
 import EyeIcon from "../components/EyeIcon.jsx";
 import {
   FiUser,
@@ -31,7 +31,7 @@ export default function Register() {
   const blur = (field) => () => setTouched((t) => ({ ...t, [field]: true }));
 
   const errors = {
-    name: validateRequired(form.name, "Full name"),
+    name: validateUsername(form.name),
     email: validateEmail(form.email),
     password: validatePassword(form.password),
     confirmPassword: validateConfirmPassword(form.confirmPassword, form.password),
